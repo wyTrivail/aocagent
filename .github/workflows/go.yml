@@ -43,7 +43,7 @@ jobs:
         path: aocagent
 
     - name: Build RPM
-      uses: naveenrajm7/rpmbuild@v1.0.0
+      uses: wyTrivail/rpmbuild@v1.0.1
       with:
         spec_file: packaging/rpm/build.amd64.spec
 
