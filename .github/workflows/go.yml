@@ -42,8 +42,8 @@ jobs:
         name: aocagentartifact
         path: aocagent
 
-    - name: Build RPM
-      uses: wyTrivail/rpmbuild@v2.0.3
+    - name: RPM Packaging
+      uses: wyTrivail/rpmbuild@v2.0.4
       with:
         spec_file: packaging/rpm/build.amd64.spec
 
