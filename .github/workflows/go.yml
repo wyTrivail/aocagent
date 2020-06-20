@@ -44,7 +44,7 @@ jobs:
         spec_file: packaging/rpm/build.amd64.spec
 
     - name: build artifact pool
-      run: 
+      run: |
 	mkdir artifact_pool
 	mv ${{ steps.rpm.outputs.rpm_dir_path }} artifact_pool/
 	mv aocagent artifact_pool/
