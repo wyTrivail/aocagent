@@ -43,7 +43,7 @@ jobs:
         path: aocagent
 
     - name: RPM Packaging
-      uses: wyTrivail/rpmbuild@v2.0.4
+      uses: wyTrivail/rpmbuild@v2.0.5
       with:
         spec_file: packaging/rpm/build.amd64.spec
 
