@@ -36,20 +36,19 @@ jobs:
     - name: Test
       run: go test -v .
       
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: aocagentartifact
-        path: aocagent
-
+    
     - name: RPM Packaging
       uses: wyTrivail/rpmbuild@v2.0.5
       id: rpm
       with:
         spec_file: packaging/rpm/build.amd64.spec
 
-    - name: Packaging all
-      uses: NSCoder/archive-action@v1.0.0
-      args: tar -cf artifact.tar ${{ steps.rpm.outputs.rpm_dir_path }} 
-      
+    - name: mv rpm to artifact pool
+      run: mv ${{ steps.rpm.outputs.rpm_dir_path }} aocagent/
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: aocagentartifact
+        path: aocagent
 
