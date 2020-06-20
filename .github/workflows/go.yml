@@ -43,12 +43,15 @@ jobs:
       with:
         spec_file: packaging/rpm/build.amd64.spec
 
-    - name: mv rpm to artifact pool
-      run: mv ${{ steps.rpm.outputs.rpm_dir_path }} aocagent/
+    - name: build artifact pool
+      run: 
+	mkdir artifact_pool
+	mv ${{ steps.rpm.outputs.rpm_dir_path }} artifact_pool/
+	mv aocagent artifact_pool/
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: aocagentartifact
-        path: aocagent
+        path: artifact_pool/
 
