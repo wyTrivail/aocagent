@@ -45,9 +45,9 @@ jobs:
 
     - name: build artifact pool
       run: |
-	mkdir artifact_pool
-	mv ${{ steps.rpm.outputs.rpm_dir_path }} artifact_pool/
-	mv aocagent artifact_pool/
+        mkdir artifact_pool
+        mv ${{ steps.rpm.outputs.rpm_dir_path }} artifact_pool/
+        mv aocagent artifact_pool/
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
