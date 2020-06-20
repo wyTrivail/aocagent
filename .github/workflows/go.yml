@@ -46,7 +46,7 @@ jobs:
     - name: build artifact pool
       run: |
         mkdir artifact_pool
-        cp ${{ steps.rpm.outputs.rpm_dir_path }}*.rpm artifact_pool/
+        cp ${{ steps.rpm.outputs.source_rpm_path }} artifact_pool/
         cp aocagent artifact_pool/
 
     - name: Upload a Build Artifact
