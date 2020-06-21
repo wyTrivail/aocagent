@@ -50,6 +50,7 @@ jobs:
 
   linux-amd64-packaging:
     name: Linux amd64 packaging
+    needs: build
     runs-on: ubuntu-latest
     steps:
 
@@ -73,11 +74,12 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: amd64_rpm
+        name: amd64_rpm_artifacts
         path: ${{ steps.amd64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
 
   linux-arm64-packaging:
     name: Linux arm64 packaging
+    needs: build
     runs-on: ubuntu-latest
     steps:
 
@@ -101,17 +103,22 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: arm64_rpm
+        name: arm64_rpm_artifacts
         path: ${{ steps.arm64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
 
   archiving:
     name: archive all the packages into one
+    needs: [linux-amd64-packaging, linux-arm64-packaging]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
 
-    - name: Download rpm archfacts
-      uses: actions/download-artifact@v2
+    # remove built artifacts since we don't need it in the final artifact
+    - uses: GeekyEggo/delete-artifact@v1.0.0
+      with:
+        name: built_artifacts
+
+    - uses: actions/download-artifact@v2
 
     - name: Display structure of downloaded files
       run: ls -R
