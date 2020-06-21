@@ -125,6 +125,13 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R
 
+    - name: Adjust package folders
+      run: |
+        mv packages/amd64_rpm/x86_64/*.rpm packages/
+        mv packages/arm64_rpm/aarch64/*.rpm packages/
+        rm -rf packages/amd64_rpm
+        rm -rf packages/arm64_rpm
+
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
