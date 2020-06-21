@@ -1,4 +1,4 @@
-Name:       acoagent
+Name:       aocagent
 Version:    {{Version}}
 Release:    1
 Summary:    Most simple RPM package
