@@ -64,16 +64,18 @@ jobs:
       run: ls -R
 
     - name: Build amd64 rpms
-      uses: wyTrivail/rpmbuild@v2.0.5
+      uses: wyTrivail/rpmbuild@v2.0.6
       id: amd64_rpm
       with:
         spec_file: build.amd64.spec
+        arch: x86_64
 
     - name: Build arm64 rpms
-      uses: wyTrivail/rpmbuild@v2.0.5 
+      uses: wyTrivail/rpmbuild@v2.0.6 
       id: arm64_rpm
       with:
         spec_file: build.arm64.spec
+        arch: aarch64
 
     - name: Upload
       uses: actions/upload-artifact@v2
