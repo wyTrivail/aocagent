@@ -1,6 +1,7 @@
 Name:       aocagent
 Version:    {{Version}}
 Release:    1
+BuildArch:  arch64
 Summary:    Most simple RPM package
 License:    FIXME
 
