@@ -74,7 +74,7 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: amd64_rpm_artifacts
+        name: amd64_rpm
         path: ${{ steps.amd64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
 
   linux-arm64-packaging:
@@ -103,7 +103,7 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: arm64_rpm_artifacts
+        name: arm64_rpm
         path: ${{ steps.arm64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
 
   archiving:
@@ -119,6 +119,8 @@ jobs:
         name: binary_artifacts
 
     - uses: actions/download-artifact@v2
+      with:
+        path: packages
 
     - name: Display structure of downloaded files
       run: ls -R
@@ -127,4 +129,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: package_artifacts
-        path: ./
+        path: ./packages
