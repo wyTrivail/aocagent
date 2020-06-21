@@ -7,7 +7,6 @@ on:
     branches: [ master ]
 
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -31,27 +30,78 @@ jobs:
         fi
 
     - name: Build
-      run: go build -v .
+      run: make install
 
-    - name: Test
-      run: go test -v .
-      
-    
-    - name: RPM Packaging
-      uses: wyTrivail/rpmbuild@v2.0.5
-      id: rpm
-      with:
-        spec_file: packaging/rpm/build.amd64.spec
-
-    - name: build artifact pool
+    - name: Versioning
       run: |
-        mkdir artifact_pool
-        cp ${{ steps.rpm.outputs.source_rpm_path }} artifact_pool/
-        cp aocagent artifact_pool/
-
-    - name: Upload a Build Artifact
+        regex_express="s/{{Version}}/`cat VERSION`/"
+        # generate amd64 rpm spec file
+        sed $regex_express packaging/rpm/build.amd64.spec > bin/build.amd64.spec
+        # generate arm64 rpm spec file
+        sed $regex_express packaging/rpm/build.arm64.spec > bin/build.arm64.spec
+        # generate amd64 deb spec file
+        # generate arm64 deb spec file
+        
+    - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: aocagentartifact
-        path: artifact_pool/
+        name: binary_artifacts
+        path: bin/
 
+  linux-packaging:
+    name: Linux packaging
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Download built artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: binary_artifacts 
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: Build amd64 rpms
+      uses: wyTrivail/rpmbuild@v2.0.5
+      id: amd64_rpm
+      with:
+        bin/build.amd64.spec
+
+    - name: Build arm64 rpms
+      uses: wyTrivail/rpmbuild@v2.0.5 
+      id: arm64_rpm
+      with:
+        bin/build.arm64.spec
+
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: rpm_artifacts
+        path: ${{ steps.amd64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
+
+  archiving:
+    name: archive all the packages into one
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Download rpm archfacts
+      uses: actions/download-artifact@v2
+      with:
+        name: rpm_artifacts 
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: Move all the packages into one folder
+      run: |
+        mkdir packages
+        mv rpm_artifacts/*.rpm packages/
+
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: package_artifacts
+        path: packages/

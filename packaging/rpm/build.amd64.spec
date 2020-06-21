@@ -1,5 +1,5 @@
 Name:       acoagent
-Version:    1.3
+Version:    {{Version}}
 Release:    1
 Summary:    Most simple RPM package
 License:    FIXME

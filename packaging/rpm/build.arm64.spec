@@ -1,5 +1,5 @@
-Name:       hello-world
-Version:    1
+Name:       aocagent
+Version:    {{Version}}
 Release:    1
 Summary:    Most simple RPM package
 License:    FIXME
