@@ -116,7 +116,7 @@ jobs:
     # remove built artifacts since we don't need it in the final artifact
     - uses: GeekyEggo/delete-artifact@v1.0.0
       with:
-        name: built_artifacts
+        name: binary_artifacts
 
     - uses: actions/download-artifact@v2
 
