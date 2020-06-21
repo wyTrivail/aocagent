@@ -48,8 +48,8 @@ jobs:
         name: binary_artifacts
         path: bin/
 
-  linux-packaging:
-    name: Linux packaging
+  linux-amd64-packaging:
+    name: Linux amd64 packaging
     runs-on: ubuntu-latest
     steps:
 
@@ -70,6 +70,27 @@ jobs:
         spec_file: build.amd64.spec
         arch: x86_64
 
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: amd64_rpm
+        path: ${{ steps.amd64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
+
+  linux-arm64-packaging:
+    name: Linux arm64 packaging
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Download built artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: binary_artifacts 
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
     - name: Build arm64 rpms
       uses: wyTrivail/rpmbuild@v2.0.6 
       id: arm64_rpm
@@ -80,8 +101,8 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        name: rpm_artifacts
-        path: ${{ steps.amd64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
+        name: arm64_rpm
+        path: ${{ steps.arm64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
 
   archiving:
     name: archive all the packages into one
@@ -91,8 +112,6 @@ jobs:
 
     - name: Download rpm archfacts
       uses: actions/download-artifact@v2
-      with:
-        name: rpm_artifacts 
 
     - name: Display structure of downloaded files
       run: ls -R
