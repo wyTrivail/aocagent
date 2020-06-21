@@ -1,7 +1,6 @@
 Name:       acoagent
 Version:    {{Version}}
 Release:    1
-BuildArch:  x86_64
 Summary:    Most simple RPM package
 License:    FIXME
 
