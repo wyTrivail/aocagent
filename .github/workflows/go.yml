@@ -36,7 +36,7 @@ jobs:
       if: github.ref != 'ref/head/master'
       run: |
         git_hash=$(git rev-parse --short "$GITHUB_SHA")
-        sed -i.bck "$s/$/$git_hash/" VERSION
+        sed -i.bck "s/$/$git_hash/" VERSION
         
     - name: Packaging preparation
       run: |
@@ -48,6 +48,9 @@ jobs:
         sed $regex_express packaging/rpm/build.arm64.spec > bin/build.arm64.spec
         # generate amd64 deb spec file
         # generate arm64 deb spec file
+        #
+        # mv VERSION to bin
+        mv VERSION bin/
         
     - name: Upload
       uses: actions/upload-artifact@v2
@@ -163,11 +166,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # remove built artifacts since we don't need it in the final artifact
-    - uses: GeekyEggo/delete-artifact@v1.0.0
-      with:
-        name: binary_artifacts
-
     - uses: actions/download-artifact@v2
       with:
         path: packages
@@ -180,13 +178,25 @@ jobs:
         mv packages/amd64_rpm/x86_64/*.rpm packages/
         mv packages/arm64_rpm/aarch64/*.rpm packages/
         mv packages/msi/*.msi packages/
-        mv VERSION packages/
+        mv packages/binary_artifacts/bin/VERSION packages/
+
         rm -rf packages/amd64_rpm
         rm -rf packages/arm64_rpm
         rm -rf packages/msi
+        rm -rf packages/binary_artifacts
 
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
         name: package_artifacts
         path: ./packages
+
+    - name: Clean up temp artifacts
+      uses: GeekyEggo/delete-artifact@v1.0.0
+      with:
+        name: |
+          binary_artifacts
+          amd64_rpm
+          arm64_rpm
+          msi
+
