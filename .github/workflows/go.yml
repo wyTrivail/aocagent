@@ -106,6 +106,47 @@ jobs:
         name: arm64_rpm
         path: ${{ steps.arm64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
 
+  windows-packaging:
+    name: Windows packaging
+    needs: build
+    runs-on: windows-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Download built artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: binary_artifacts 
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: Install go-msi
+      run: choco install -y "go-msi"
+
+    - name: Prepare PATH
+      shell: bash
+      run: |
+        echo "::add-path::$WIX\\bin"
+        echo "::add-path::C:\\Program Files\\go-msi"
+
+    - name: Build MSI
+      id: buildmsi
+      shell: bash
+      run: |
+        mkdir -p build
+        msi="aocagent.msi"
+        printf "::set-output name=msi::%s\n" "$msi"
+        version=`cat VERSION`
+        go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version $version
+
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: msi
+        path: build
+
   archiving:
     name: archive all the packages into one
     needs: [linux-amd64-packaging, linux-arm64-packaging]
@@ -129,8 +170,10 @@ jobs:
       run: |
         mv packages/amd64_rpm/x86_64/*.rpm packages/
         mv packages/arm64_rpm/aarch64/*.rpm packages/
+        mv packages/msi/*.msi packages/
         rm -rf packages/amd64_rpm
         rm -rf packages/arm64_rpm
+        rm -rf packages/msi
 
     - name: Upload
       uses: actions/upload-artifact@v2
