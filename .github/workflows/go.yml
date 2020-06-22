@@ -35,9 +35,9 @@ jobs:
     - name: Versioning for non master branch
       if: github.ref != 'ref/head/master'
       run: |
-        # provide a special patch version for each built on non-master branch so that we can perform integ-test internally
+        # provide a special patch version for each built on non-master branch so that we can perform end-to-end test in parallel
         patch_version=${{ github.run_id }}
-        sed -i.bck "s/$/$git_hash/" VERSION
+        sed -i.bck "s/$/$patch_version/" VERSION
         
     - name: Packaging preparation
       run: |
@@ -150,7 +150,7 @@ jobs:
         msi="aocagent.msi"
         printf "::set-output name=msi::%s\n" "$msi"
         version=`cat VERSION`
-        go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version $version --path "$PWD/packaging/msi/wix.json"
+        go-msi make --msi "$PWD/build/$msi" --out "$PWD/build" --version $version --path "$PWD/packaging/msi/wix.json"
 
     - run: ls -R
 
