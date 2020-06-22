@@ -32,16 +32,11 @@ jobs:
     - name: Build
       run: make install
 
-    - name: Versioning for non master branch
-      if: github.ref != 'ref/head/master'
-      run: |
-        # provide a special patch version for each built on non-master branch so that we can perform end-to-end test in parallel
-        patch_version=${{ github.run_id }}
-        sed -i.bck "s/$/$patch_version/" VERSION
-        
     - name: Packaging preparation
       run: |
-        cat VERSION
+        echo ${{ github.run_id }} > bin/GITHUB_RUN_ID # we could use it for performing end-to-end test in parallel
+        echo ${{ github.ref }} > bin/GITHUB_BRANCH # for example: ref/head/master
+
         regex_express="s/{{Version}}/`cat VERSION`/"
         # generate amd64 rpm spec file
         sed $regex_express packaging/rpm/build.amd64.spec > bin/build.amd64.spec
@@ -180,6 +175,8 @@ jobs:
         mv packages/arm64_rpm/aarch64/*.rpm packages/
         mv packages/msi/*.msi packages/
         mv packages/binary_artifacts/bin/VERSION packages/
+        mv packages/binary_artifacts/bin/GITHUB_BRANCH packages/
+        mv packages/binary_artifacts/bin/GITHUB_RUN_ID packages/
 
         rm -rf packages/amd64_rpm
         rm -rf packages/arm64_rpm
