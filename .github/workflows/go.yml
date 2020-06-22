@@ -32,7 +32,13 @@ jobs:
     - name: Build
       run: make install
 
-    - name: Versioning
+    - name: Versioning for non master branch
+      if: {{ github.ref != 'ref/head/master' }}
+      run: |
+        git_hash=$(git rev-parse --short "$GITHUB_SHA")
+        echo $git_hash >> VERSION
+        
+    - name: Packaging preparation
       run: |
         regex_express="s/{{Version}}/`cat VERSION`/"
         # generate amd64 rpm spec file
@@ -141,11 +147,13 @@ jobs:
         version=`cat VERSION`
         go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version $version --path "$PWD/packaging/msi/wix.json"
 
+    - run: ls -R
+
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
         name: msi
-        path: build
+        path: "$PWD/build"
 
   archiving:
     name: archive all the packages into one
