@@ -6,7 +6,7 @@
   "files": {
     "guid": "378896D8-6749-4821-870A-44CBBB791D0C",
     "items": [
-      "bin/aocagent_windows_amd64"
+      "aocagent_windows_amd64"
     ]
   },
   "env": {
