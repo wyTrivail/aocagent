@@ -139,7 +139,7 @@ jobs:
         msi="aocagent.msi"
         printf "::set-output name=msi::%s\n" "$msi"
         version=`cat VERSION`
-        go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version $version --path packaging/msi/wix.json
+        go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version $version --path "$PWD/packaging/msi/wix.json"
 
     - name: Upload
       uses: actions/upload-artifact@v2
