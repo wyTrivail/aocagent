@@ -40,6 +40,7 @@ jobs:
         
     - name: Packaging preparation
       run: |
+        cat VERSION
         regex_express="s/{{Version}}/`cat VERSION`/"
         # generate amd64 rpm spec file
         sed $regex_express packaging/rpm/build.amd64.spec > bin/build.amd64.spec
