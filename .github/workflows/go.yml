@@ -36,7 +36,7 @@ jobs:
       if: github.ref != 'ref/head/master'
       run: |
         git_hash=$(git rev-parse --short "$GITHUB_SHA")
-        sed -i.bck '$s/$/$(git_hash)/' VERSION
+        sed -i.bck "$s/$/$git_hash/" VERSION
         
     - name: Packaging preparation
       run: |
@@ -180,6 +180,7 @@ jobs:
         mv packages/amd64_rpm/x86_64/*.rpm packages/
         mv packages/arm64_rpm/aarch64/*.rpm packages/
         mv packages/msi/*.msi packages/
+        mv VERSION packages/
         rm -rf packages/amd64_rpm
         rm -rf packages/arm64_rpm
         rm -rf packages/msi
