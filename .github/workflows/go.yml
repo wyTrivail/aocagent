@@ -48,7 +48,7 @@ jobs:
         name: binary_artifacts
         path: bin/
 
-  linux-amd64-packaging:
+  rpm-amd64-packaging:
     name: Linux amd64 packaging
     needs: build
     runs-on: ubuntu-latest
@@ -77,7 +77,7 @@ jobs:
         name: amd64_rpm
         path: ${{ steps.amd64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
 
-  linux-arm64-packaging:
+  rpm-arm64-packaging:
     name: Linux arm64 packaging
     needs: build
     runs-on: ubuntu-latest
@@ -106,7 +106,7 @@ jobs:
         name: arm64_rpm
         path: ${{ steps.arm64_rpm.outputs.rpm_dir_path }} # both arm64 and amd64 rpms are in the same folder
 
-  windows-packaging:
+  msi-packaging:
     name: Windows packaging
     needs: build
     runs-on: windows-latest
@@ -149,7 +149,7 @@ jobs:
 
   archiving:
     name: archive all the packages into one
-    needs: [linux-amd64-packaging, linux-arm64-packaging]
+    needs: [rpm-amd64-packaging, rpm-arm64-packaging, msi-packaging]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
