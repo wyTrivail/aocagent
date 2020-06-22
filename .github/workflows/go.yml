@@ -145,7 +145,7 @@ jobs:
         msi="aocagent.msi"
         printf "::set-output name=msi::%s\n" "$msi"
         version=`cat VERSION`
-        go-msi make --msi "$PWD/build/$msi" --out "$PWD/build" --version $version --path "$PWD/packaging/msi/wix.json"
+        go-msi make --msi "$PWD/$msi" --out "$PWD/build" --version $version --path "$PWD/packaging/msi/wix.json"
 
     - run: ls -R
 
@@ -153,7 +153,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: msi
-        path: "$PWD/build"
+        path: aocagent.msi
 
   archiving:
     name: archive all the packages into one
