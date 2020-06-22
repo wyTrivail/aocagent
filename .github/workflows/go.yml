@@ -174,9 +174,9 @@ jobs:
         mv packages/amd64_rpm/x86_64/*.rpm packages/
         mv packages/arm64_rpm/aarch64/*.rpm packages/
         mv packages/msi/*.msi packages/
-        mv packages/binary_artifacts/bin/VERSION packages/
-        mv packages/binary_artifacts/bin/GITHUB_BRANCH packages/
-        mv packages/binary_artifacts/bin/GITHUB_RUN_ID packages/
+        mv packages/binary_artifacts/VERSION packages/
+        mv packages/binary_artifacts/GITHUB_BRANCH packages/
+        mv packages/binary_artifacts/GITHUB_RUN_ID packages/
 
         rm -rf packages/amd64_rpm
         rm -rf packages/arm64_rpm
