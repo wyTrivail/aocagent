@@ -56,8 +56,6 @@ jobs:
 
     - name: integ-test
       uses: wytrivail/aocintegtest@master
-      with:
-        task: EC2Test
 
   rpm-amd64-packaging:
     name: Linux amd64 packaging
